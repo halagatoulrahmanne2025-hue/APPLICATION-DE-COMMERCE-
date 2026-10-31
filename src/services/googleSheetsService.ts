@@ -253,13 +253,18 @@ export class GoogleSheetsService {
 
     const targetUrl = validation.url;
 
-    // 1. Essai prioritaire via notre serveur proxy /api/sheets/test (sans aucun problème CORS)
+    // 1. Essai prioritaire via notre proxy /api/sheets/test
     try {
       const proxyRes = await fetch('/api/sheets/test', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ webAppUrl: targetUrl })
       });
+
+      const contentType = proxyRes.headers.get('content-type') || '';
+      if (!proxyRes.ok || !contentType.includes('application/json')) {
+        throw new Error(`Proxy non disponible (HTTP ${proxyRes.status})`);
+      }
 
       const proxyData = await proxyRes.json();
 
@@ -416,6 +421,11 @@ export class GoogleSheetsService {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ webAppUrl: validation.url })
       });
+
+      const contentType = proxyRes.headers.get('content-type') || '';
+      if (!proxyRes.ok || !contentType.includes('application/json')) {
+        throw new Error(`Proxy non disponible (HTTP ${proxyRes.status})`);
+      }
 
       const proxyData = await proxyRes.json();
 
@@ -641,6 +651,11 @@ export class GoogleSheetsService {
         body: JSON.stringify({ webAppUrl: url, formType, payload })
       });
 
+      const contentType = proxyRes.headers.get('content-type') || '';
+      if (!proxyRes.ok || !contentType.includes('application/json')) {
+        throw new Error(`Proxy non disponible (HTTP ${proxyRes.status})`);
+      }
+
       const proxyData = await proxyRes.json();
 
       if (proxyData.success) {
@@ -793,6 +808,11 @@ export class GoogleSheetsService {
           })
         });
 
+        const contentType = proxyRes.headers.get('content-type') || '';
+        if (!proxyRes.ok || !contentType.includes('application/json')) {
+          throw new Error(`Proxy non disponible (HTTP ${proxyRes.status})`);
+        }
+
         const proxyData = await proxyRes.json();
 
         if (proxyData.success === true) {
@@ -807,7 +827,7 @@ export class GoogleSheetsService {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({
-              formType: item.formType,
+              formType: formTypeToSend,
               timestamp: new Date().toISOString(),
               ...item.payload
             })

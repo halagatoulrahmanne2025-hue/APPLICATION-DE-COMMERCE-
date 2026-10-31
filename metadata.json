@@ -1,0 +1,6 @@
+{
+  "name": "Collecte Commerciale - Google Sheets",
+  "description": "Application web et mobile de collecte des données commerciales (ventes, produits, dépenses, factures) connectée à Google Sheets via Google Apps Script.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
